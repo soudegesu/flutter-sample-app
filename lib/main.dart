@@ -1,25 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:english_words/english_words.dart';
 
 void main() => runApp(new MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {    
     return new MaterialApp(
-      title: 'Flutter Demo',
-      theme: new ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
-        // counter didn't reset back to zero; the application is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: new MyHomePage(title: 'Flutter Demo Home Page'),
+      title: 'Startup Name Genarator',
+      home: RandomWords(),
     );
   }
 }
@@ -29,7 +19,7 @@ class MyHomePage extends StatefulWidget {
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
+  // how it looks.z
 
   // This class is the configuration for the state. It holds the values (in this
   // case the title) provided by the parent (in this case the App widget) and
@@ -99,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: new FloatingActionButton(
+      floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: new Icon(Icons.add),
@@ -107,3 +97,48 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+class RandomWordState extends State<RandomWords> {
+  
+  final _suggenstions = <WordPair>[];
+  final _biggerFont = const TextStyle(fontSize: 18.0);
+  
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Satrtup Name Genarator')
+      ),
+      body: _buildSuggestions(),
+    );
+  }
+
+  Widget _buildSuggestions() {
+    return ListView.builder(
+      padding: const EdgeInsets.all(16.0),
+      itemBuilder: (context,i) {
+        if (i.isOdd) return Divider();
+        final index = i ~/ 2;
+        if (index >= _suggenstions.length) {
+          _suggenstions.addAll(generateWordPairs().take(10));          
+        }
+        return _buildRow(_suggenstions[index]);
+      }
+    );
+  }
+
+  Widget _buildRow(WordPair pair) {
+    return ListTile(
+      title: Text(
+        pair.asPascalCase,
+        style: _biggerFont
+      ),
+    );
+  }
+}
+
+class RandomWords extends StatefulWidget {
+  @override
+  RandomWordState createState() => new RandomWordState();
+}
+
